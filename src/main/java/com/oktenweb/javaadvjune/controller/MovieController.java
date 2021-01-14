@@ -1,29 +1,25 @@
 package com.oktenweb.javaadvjune.controller;
 
-import com.oktenweb.javaadvjune.dao.MovieRepository;
 import com.oktenweb.javaadvjune.entity.Movie;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import com.oktenweb.javaadvjune.service.IMovieService;
+import com.oktenweb.javaadvjune.validation.MovieValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 //@Component
 //@Bean
@@ -38,36 +34,41 @@ import java.util.Optional;
 public class MovieController {
 
     @Autowired
-    private MovieRepository movieRepository;
+    private IMovieService movieService;
 
 //    @RequestMapping(value = "/movies", method = RequestMethod.GET)
     @GetMapping
     public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+        return movieService.getAllMovies();
+    }
+
+    //bad practice!!! PathVariable > RequestParam
+    @GetMapping("/movie")
+    public Movie getMovie(@RequestParam int id) {
+        return movieService.getMovieById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Movie createMovie(@RequestBody Movie movie) {
-        return movieRepository.saveAndFlush(movie);
+    public Movie createMovie(@RequestBody @Valid Movie movie) {
+        return movieService.saveMovie(movie);
     }
 
     @PutMapping(value = "/{id}")
-    public Movie updateMovie(@PathVariable int id, @RequestBody Movie movie) {
-        if (movieRepository.existsById(id)) {
-            movie.setId(id);
-            return movieRepository.saveAndFlush(movie);
-        } else {
-            throw new IllegalArgumentException("No movie with such id: " + id);
-        }
+    public Movie updateMovie(@PathVariable int id, @RequestBody @Valid Movie movie) {
+        return movieService.updateMovie(id, movie);
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMovie(@PathVariable int id) {
-        movieRepository.deleteById(id);
+        movieService.deleteMovie(id);
     }
 
+    @InitBinder
+    public void initBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(new MovieValidator());
+    }
 }
 
 
