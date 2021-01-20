@@ -1,12 +1,11 @@
 package com.oktenweb.javaadvjune.service;
 
 import com.oktenweb.javaadvjune.dao.MovieRepository;
+import com.oktenweb.javaadvjune.dto.BadRequestException;
 import com.oktenweb.javaadvjune.entity.Movie;
 import org.apache.commons.lang3.CharUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class MovieService implements IMovieService {
     public Movie saveMovie(Movie movie) {
         final char firstLetter = movie.getTitle().charAt(0);
         if (!CharUtils.isAsciiAlphaUpper(firstLetter)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title should start with capital letter");
+            throw new BadRequestException("Title should start with capital letter");
         }
         return movieRepository.saveAndFlush(movie);
     }

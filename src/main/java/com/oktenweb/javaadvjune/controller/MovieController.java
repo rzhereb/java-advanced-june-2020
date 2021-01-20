@@ -3,6 +3,9 @@ package com.oktenweb.javaadvjune.controller;
 import com.oktenweb.javaadvjune.entity.Movie;
 import com.oktenweb.javaadvjune.service.IMovieService;
 import com.oktenweb.javaadvjune.validation.MovieValidator;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.WebDataBinder;
@@ -31,10 +34,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/movies")
+@Slf4j
 public class MovieController {
 
     @Autowired
     private IMovieService movieService;
+
+    // if you don't have lombok in your project
+//    private static Logger logger = LoggerFactory.getLogger(MovieController.class);
 
 //    @RequestMapping(value = "/movies", method = RequestMethod.GET)
     @GetMapping
@@ -42,15 +49,16 @@ public class MovieController {
         return movieService.getAllMovies();
     }
 
-    //bad practice!!! PathVariable > RequestParam
+    //PathVariable > RequestParam (RequestParam sometimes is bad practice)
     @GetMapping("/movie")
-    public Movie getMovie(@RequestParam int id) {
+    public Movie getMovie(@PathVariable int id) {
         return movieService.getMovieById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Movie createMovie(@RequestBody @Valid Movie movie) {
+        log.info("Handled POST request with body: {}", movie);
         return movieService.saveMovie(movie);
     }
 
@@ -65,10 +73,10 @@ public class MovieController {
         movieService.deleteMovie(id);
     }
 
-    @InitBinder
-    public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(new MovieValidator());
-    }
+//    @InitBinder
+//    public void initBinder(WebDataBinder webDataBinder) {
+//        webDataBinder.addValidators(new MovieValidator());
+//    }
 }
 
 

@@ -15,7 +15,7 @@ public @interface UniqueMovieTitle {
 
     String message() default "Movie title should be unique";
 
-    Class<?> groups();
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload> payload();
+    Class<? extends Payload>[] payload() default {};
 }

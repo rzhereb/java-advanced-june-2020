@@ -1,6 +1,7 @@
 package com.oktenweb.javaadvjune.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.oktenweb.javaadvjune.validation.UniqueMovieTitle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class Movie {
 //    @Column // optional
     @Column(name = "movie_title")
     @NotBlank
+//    @UniqueMovieTitle
     private String title;
     @Positive
     @Max(value = 210)
