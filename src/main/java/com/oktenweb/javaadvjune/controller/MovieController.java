@@ -1,23 +1,19 @@
 package com.oktenweb.javaadvjune.controller;
 
+import com.oktenweb.javaadvjune.dto.MovieCreateDto;
+import com.oktenweb.javaadvjune.dto.MovieDto;
 import com.oktenweb.javaadvjune.entity.Movie;
 import com.oktenweb.javaadvjune.service.IMovieService;
-import com.oktenweb.javaadvjune.validation.MovieValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,19 +41,19 @@ public class MovieController {
 
 //    @RequestMapping(value = "/movies", method = RequestMethod.GET)
     @GetMapping
-    public List<Movie> getAllMovies() {
+    public List<MovieDto> getAllMovies() {
         return movieService.getAllMovies();
     }
 
     //PathVariable > RequestParam (RequestParam sometimes is bad practice)
-    @GetMapping("/movie")
-    public Movie getMovie(@PathVariable int id) {
+    @GetMapping("/{id}")
+    public MovieDto getMovie(@PathVariable int id) {
         return movieService.getMovieById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Movie createMovie(@RequestBody @Valid Movie movie) {
+    public MovieDto createMovie(@RequestBody @Valid MovieCreateDto movie) {
         log.info("Handled POST request with body: {}", movie);
         return movieService.saveMovie(movie);
     }

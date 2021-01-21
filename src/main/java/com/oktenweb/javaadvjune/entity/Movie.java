@@ -1,16 +1,18 @@
 package com.oktenweb.javaadvjune.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.oktenweb.javaadvjune.validation.UniqueMovieTitle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
@@ -34,5 +36,12 @@ public class Movie {
     @Positive
     @Max(value = 210)
     private int duration;
+
+    @ManyToOne(targetEntity = Director.class, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Director director;
+//
+//    @ManyToOne(targetEntity = Director.class)
+//    private Director directorRewarded;
 
 }
