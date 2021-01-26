@@ -1,11 +1,14 @@
 package com.oktenweb.javaadvjune.controller;
 
 import com.oktenweb.javaadvjune.dto.MovieCreateDto;
+import com.oktenweb.javaadvjune.dto.MovieDirectorDto;
 import com.oktenweb.javaadvjune.dto.MovieDto;
+import com.oktenweb.javaadvjune.dto.MoviePageDto;
 import com.oktenweb.javaadvjune.entity.Movie;
 import com.oktenweb.javaadvjune.service.IMovieService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,8 +45,14 @@ public class MovieController {
 
 //    @RequestMapping(value = "/movies", method = RequestMethod.GET)
     @GetMapping
-    public List<MovieDto> getAllMovies() {
-        return movieService.getAllMovies();
+    public MoviePageDto getAllMovies(@RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "3") int size) {
+        return movieService.getAllMovies(PageRequest.of(page, size));
+    }
+
+    @GetMapping("/director/{name}")
+    public MovieDirectorDto getMoviesByDirectorName(@PathVariable String name) {
+        return movieService.getMoviesByDirectorName(name);
     }
 
     //PathVariable > RequestParam (RequestParam sometimes is bad practice)

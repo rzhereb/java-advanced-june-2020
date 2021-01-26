@@ -4,11 +4,15 @@ import com.oktenweb.javaadvjune.dao.DirectorRepository;
 import com.oktenweb.javaadvjune.dao.MovieRepository;
 import com.oktenweb.javaadvjune.dto.BadRequestException;
 import com.oktenweb.javaadvjune.dto.MovieCreateDto;
+import com.oktenweb.javaadvjune.dto.MovieDirectorDto;
 import com.oktenweb.javaadvjune.dto.MovieDto;
+import com.oktenweb.javaadvjune.dto.MoviePageDto;
 import com.oktenweb.javaadvjune.entity.Director;
 import com.oktenweb.javaadvjune.entity.Movie;
 import org.apache.commons.lang3.CharUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,10 +49,12 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieDto> getAllMovies() {
-        return movieRepository.findAll().stream().map(movie ->
-                new MovieDto(movie.getId(), movie.getTitle(), movie.getDuration(), movie.getDirector().getName())
+    public MoviePageDto getAllMovies(PageRequest pageRequest) {
+        final Page<Movie> moviePage = movieRepository.findAll(pageRequest);
+        final List<MovieDto> movies = moviePage.stream().map(movie ->
+            new MovieDto(movie.getId(), movie.getTitle(), movie.getDuration(), movie.getDirector().getName())
         ).collect(Collectors.toList());
+        return new MoviePageDto(movies, moviePage.getTotalPages());
     }
 
     @Override
@@ -69,6 +75,18 @@ public class MovieService implements IMovieService {
         } else {
             throw new IllegalArgumentException("No movie with such id: " + id);
         }
+    }
+
+    @Override
+    public MovieDirectorDto getMoviesByDirectorName(String name) {
+        final Director director = directorRepository.findMoviesByDirectorName(name);
+        final int directorId = director.getId();
+        final String directorName = director.getName();
+        final List<Movie> movies = director.getMovies();
+        final List<MovieDto> movieDtos = movies.stream()
+            .map(movie -> new MovieDto(movie.getId(), movie.getTitle(), movie.getDuration(), directorName))
+            .collect(Collectors.toList());
+        return new MovieDirectorDto(directorId, movieDtos);
     }
 
     private MovieDto convertToMovieDto(Movie movie) {

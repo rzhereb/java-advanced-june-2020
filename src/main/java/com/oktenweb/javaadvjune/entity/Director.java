@@ -16,7 +16,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -33,8 +36,18 @@ public class Director {
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "director", fetch = FetchType.LAZY)
-    private Set<Movie> movies = new HashSet<>();
+    private List<Movie> movies = new LinkedList<>();
 //
 //    @OneToMany(mappedBy = "directorRewarded")
 //    private Set<Movie> awardMovies = new HashSet<>();
+
+
+    @Override
+    public String toString() {
+        return "Director{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", birthDate=" + birthDate +
+            '}';
+    }
 }

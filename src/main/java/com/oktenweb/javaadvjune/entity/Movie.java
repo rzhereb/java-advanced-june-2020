@@ -44,4 +44,14 @@ public class Movie {
 //    @ManyToOne(targetEntity = Director.class)
 //    private Director directorRewarded;
 
+
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", duration=" + duration +
+            '}';
+    }
 }
