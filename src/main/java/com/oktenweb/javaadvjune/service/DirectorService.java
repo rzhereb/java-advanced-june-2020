@@ -3,6 +3,7 @@ package com.oktenweb.javaadvjune.service;
 import com.oktenweb.javaadvjune.dao.DirectorRepository;
 import com.oktenweb.javaadvjune.entity.Director;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class DirectorService implements IDirectorService {
     private DirectorRepository directorRepository;
 
     @Autowired
-    public DirectorService(DirectorRepository directorRepository) {
+    public DirectorService(@Qualifier("directorRepository") DirectorRepository directorRepository) {
         this.directorRepository = directorRepository;
     }
 
