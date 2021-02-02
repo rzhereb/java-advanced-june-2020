@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 //@Component
@@ -57,7 +59,7 @@ public class MovieController {
 
     //PathVariable > RequestParam (RequestParam sometimes is bad practice)
     @GetMapping("/{id}")
-    public MovieDto getMovie(@PathVariable int id) {
+    public MovieDto getMovie(@PathVariable int id, HttpServletRequest request, Principal principal) {
         return movieService.getMovieById(id);
     }
 

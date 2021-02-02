@@ -4,6 +4,7 @@ import com.oktenweb.javaadvjune.dao.DirectorRepository;
 import com.oktenweb.javaadvjune.entity.Director;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
