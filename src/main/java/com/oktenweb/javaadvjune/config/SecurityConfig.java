@@ -47,13 +47,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
+    // antmatchers мають йти від НАЙБІЛЬШ КОНКРЕТНОГО до БІЛЬШ ЗАГАЛЬНОГО
+    // POST /users є більш конкретним, ніж просто /POST, тому має йти найвище
     http.cors().disable().csrf().disable()
-//        .authorizeRequests()
-//        .antMatchers(HttpMethod.POST).hasRole("ADMIN")
-//        .antMatchers(HttpMethod.PUT, "/directors").hasRole("ADMIN")
-//       .antMatchers("/**").authenticated()
-//        .antMatchers(HttpMethod.POST, "/users").anonymous()
-//        .and()
+        .authorizeRequests()
+        .antMatchers(HttpMethod.POST, "/users").anonymous()
+        .antMatchers(HttpMethod.POST).hasRole("ADMIN")
+        .antMatchers(HttpMethod.PUT, "/directors").hasRole("ADMIN")
+        .anyRequest().anonymous()
+        .and()
         .httpBasic();
   }
 }
